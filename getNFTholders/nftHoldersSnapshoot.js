@@ -1,4 +1,5 @@
 const ethers = require('ethers');
+const fs = require('fs');
 
 const providerRPC = {
   mainnet: {
@@ -22,12 +23,22 @@ totalSupply = 10000;
 
 const snapshoot = async () => {
   console.log(`reading token holders for contract ${contractAddress} on ${providerRPC.mainnet.name}` );
+  fs.writeFileSync('snapshot.txt', '');
 
   const contract = new ethers.Contract(contractAddress, abi, provider);
-  for (let i=1; i<totalSupply; i++) {
-    const tokenBalance = await contract.ownerOf(i);
-    // console.log(`The holder for tokenID=${i} is ${tokenBalance}`);
-    console.log(tokenBalance);
+  for (let i=1; i<=totalSupply; i++) {
+    await readOwner(contract, i);
+  }
+}
+
+const readOwner = async (contract, id) => {
+  try {
+    const tokenBalance = await contract.ownerOf(id);
+    const output = `The holder for tokenID=${id.toString().padStart(5, '0')} is ${tokenBalance}`;
+    console.log(output);
+    fs.appendFileSync('snapshot.txt', output + '\n');
+  } catch {
+    await readOwner(contract, id);
   }
 }
 
