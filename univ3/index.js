@@ -55,7 +55,7 @@ async function getPrice(factory, tokenInContractAddress, tokenOutContractAddress
 
   if (Number(poolAddress).toString() === "0") // there is no such pool for provided In-Out tokens.
     throw `Error: No pool ${tokenIn.symbol}-${tokenOut.symbol}`;
-  else console.log(`${tokenIn.symbol}-${tokenOut.symbol} Pool address: ${poolAddress}, commission=${commission/10000}%`);
+  else console.log(`${tokenIn.symbol}-${tokenOut.symbol} Pool address: ${poolAddress}, commission=${commission / 10000}%`);
 
   const poolContract = new ethers.Contract(poolAddress, POOL_ABI, provider);
 
@@ -115,8 +115,18 @@ async function getPrice(factory, tokenInContractAddress, tokenOutContractAddress
 
 const ASTR_ADDRESS = '0xdf41220C7e322bFEF933D85D01821ad277f90172'
 const USDC_ADDRESS = '0xA8CE8aee21bC2A48a5EF670afCc9274C7bbbC035'
-const UNISWAP_FACTORY_ADDRESS = '0x56c2162254b0E4417288786eE402c2B41d4e181e'; // QuickSwap
-const COMMISSION = 100
+const HAHA_ADDRESS = '0xA84DBE4602cBAcfe8Cd858Fe910b88ba0e8b8B18'
 
-getPrice(UNISWAP_FACTORY_ADDRESS, ASTR_ADDRESS, USDC_ADDRESS, COMMISSION)
+const UNISWAP_FACTORY_ADDRESS = '0x56c2162254b0E4417288786eE402c2B41d4e181e'; // QuickSwap
+const L2X_FACTORY_ADDRESS = '0x350B0F09EE6659e18a2642d6B25b909d59271e3c'; // L2X
+const ARTHSWAP_FACTORY_ADDRESS = '0xAeaaf0e2c81Af264101B9129C00F4440cCF0F720'; // ArthSwap
+const COMMISSION = 3000
+
+getPrice(UNISWAP_FACTORY_ADDRESS, USDC_ADDRESS, ASTR_ADDRESS, COMMISSION)
+  .catch(console.error);
+
+getPrice(L2X_FACTORY_ADDRESS,USDC_ADDRESS, ASTR_ADDRESS, COMMISSION)
+  .catch(console.error);
+
+getPrice(ARTHSWAP_FACTORY_ADDRESS, USDC_ADDRESS, ASTR_ADDRESS, COMMISSION)
   .catch(console.error);
