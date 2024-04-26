@@ -18,7 +18,7 @@ const ZKASTAR_MAINNET = 3776;
 // Swap astr/usdc on QS
 // https://astar-zkevm.explorer.startale.com/tx/0xe1f7c32a0e4a9be94a66377b2d92fd5c2c6ef8611c9d70b2bf0783f6d6fe3cad
 
-async function getPrice(factory, tokenInContractAddress, tokenOutContractAddress, commission) {
+async function getPrice(poolId, factory, tokenInContractAddress, tokenOutContractAddress, commission) {
   const chainId = ZKASTAR_MAINNET;
   const provider = new ethers.providers.JsonRpcProvider('https://rpc.startale.com/astar-zkevm', ZKASTAR_MAINNET);
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
@@ -41,21 +41,20 @@ async function getPrice(factory, tokenInContractAddress, tokenOutContractAddress
   const [tokenIn] = await getTokenAndBalance(contractIn);
   const [tokenOut] = await getTokenAndBalance(contractOut);
 
-  console.log(`   Input: ${tokenIn.symbol} (${tokenIn.name})`);
-  console.log(`   Output: ${tokenOut.symbol} (${tokenOut.name})`);
-  console.log("");
-
   // Get the pair pool address
-  console.log("Loading pool information...");
+  console.log("Loading pool ", poolId);
   const factoryContract = new ethers.Contract(factory, FACTORY_ABI, provider);
   const poolAddress = await factoryContract.getPool(
     tokenIn.address,
     tokenOut.address,
     commission);  // 3% = 3000
 
-  if (Number(poolAddress).toString() === "0") // there is no such pool for provided In-Out tokens.
-    throw `Error: No pool ${tokenIn.symbol}-${tokenOut.symbol}`;
-  else console.log(`${tokenIn.symbol}-${tokenOut.symbol} Pool address: ${poolAddress}, commission=${commission / 10000}%`);
+  if (Number(poolAddress).toString() === "0") {// there is no such pool for provided In-Out tokens.
+    throw `Error: No pool ${poolId}-${commission}`;
+  }
+  else 
+    console.log(`${poolId}, ${tokenIn.symbol}-${tokenOut.symbol} Pool address: ${poolAddress}, commission=${commission / 10000}%`)
+
 
   const poolContract = new ethers.Contract(poolAddress, POOL_ABI, provider);
 
@@ -106,11 +105,20 @@ async function getPrice(factory, tokenInContractAddress, tokenOutContractAddress
   );
 
   // print token prices in the pool
-  console.log("Token prices in pool:");
-  console.log(`   1 ${pool.token0.symbol} = ${pool.token0Price.toSignificant()} ${pool.token1.symbol}`);
-  console.log(`   1 ${pool.token1.symbol} = ${pool.token1Price.toSignificant()} ${pool.token0.symbol}`);
-  console.log(`Pool liquidity: ${pool.liquidity}`);
-  console.log('');
+  // console.log("Token prices in pool:");
+  // console.log(`   1 ${pool.token0.symbol} = ${pool.token0Price.toSignificant()} ${pool.token1.symbol}`);
+  // console.log(`   1 ${pool.token1.symbol} = ${pool.token1Price.toSignificant()} ${pool.token0.symbol}`);
+  // console.log(`Pool liquidity: ${pool.liquidity}`);
+  // console.log('');
+
+  return {
+    id: poolId + "-" + commission.toString(),
+    token0Symbol: pool.token0.symbol,
+    token1Symbol: pool.token1.symbol,
+    token0Price: pool.token0Price.toSignificant(),
+    token1Price: pool.token1Price.toSignificant(),
+    liquidity: pool.liquidity.toString(),
+  }
 }
 
 module.exports = { getPrice };
