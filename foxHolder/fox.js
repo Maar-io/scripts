@@ -50,7 +50,7 @@ const fetchPage = async (skip, fromTime, toTime) => {
 
 const fetchAllPages = async () => {
     let loop = 1;
-    let fromTimestamp = "1710975600"; // Start from the initial fromTime
+    let fromTimestamp = "1709506800"; // Start from the initial fromTime
     const SECONDS_IN_A_WEEK = 604800; // 60 seconds * 60 minutes * 24 hours * 7 days
     const SECONDS_IN_A_DAY = 86400;
     const END_TIMESTAMP = "1714586400"; // Unix timestamp for May 1st, 2024
