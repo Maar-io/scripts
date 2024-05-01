@@ -117,6 +117,7 @@ async function getPrice(poolId, factory, tokenInContractAddress, tokenOutContrac
     token1Symbol: pool.token1.symbol,
     token0Price: pool.token0Price.toSignificant(),
     token1Price: pool.token1Price.toSignificant(),
+    fee: immutables.fee.toString(),
     liquidity: pool.liquidity.toString(),
   }
 }

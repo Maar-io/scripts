@@ -40,7 +40,7 @@ entries = [
         const result = await Promise.all(promises);
         console.log(result);
 
-        const profitable = findProfitableSwaps(result);
+        const profitable = findProfitableSwaps(result, 1000);
         if (profitable.length === 0) {
             console.log("No profitable swaps found");
         }

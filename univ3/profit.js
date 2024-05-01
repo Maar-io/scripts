@@ -1,4 +1,4 @@
-function findProfitableSwaps(entries) {
+function findProfitableSwaps(entries, swappingValue) {
 
   let profitableSwaps = [];
   for (let i = 0; i < entries.length; i++) {
@@ -10,8 +10,22 @@ function findProfitableSwaps(entries) {
       if (entry1.token0Symbol === entry2.token0Symbol && entry1.token1Symbol === entry2.token1Symbol) {
         // Calculate the profit
         console.log("checking" + entry1.id, entry1.token1Price + "-" + entry2.id, entry2.token1Price);
-        let profit = (1000 * parseFloat(entry1.token1Price)) / parseFloat(entry2.token1Price) - 1000;
 
+        // Calculate the amount you get after swapping in the first market
+        let amountAfterSwap1 = swappingValue * parseFloat(entry1.token1Price);
+
+        // Subtract the fee
+        let amountAfterFee1 = amountAfterSwap1 - (amountAfterSwap1 * entry1.fee / 10000);
+
+        // Calculate the amount you get after swapping in the second market
+        let amountAfterSwap2 = amountAfterFee1 / parseFloat(entry2.token1Price);
+
+        // Subtract the fee
+        let amountAfterFee2 = amountAfterSwap2 - (amountAfterSwap2 * entry2.fee / 10000);
+
+        // Calculate the profit
+        let profit = amountAfterFee2 - swappingValue;
+        console.log("profit", profit);
         if (profit > 0) {
           profitableSwaps.push({ entry1, entry2, profit });
         }

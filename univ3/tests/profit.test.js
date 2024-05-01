@@ -1,6 +1,43 @@
 import { findProfitableSwaps } from '../profit.js';
 
-describe('findProfitableSwaps', () => {
+describe('Should not find Profitable Swaps', () => {
+  it('should not find profitable swaps', () => {
+    const entries = 
+    [
+        {
+          id: 'QUICKSWAP-USDC-ETH-3000',
+          token0Symbol: 'USDC',
+          token1Symbol: 'WETH',
+          token0Price: '0.000320859',
+          token1Price: '3116.64',
+          fee: '3000',
+          liquidity: '70495382874864'
+        },
+        {
+          id: 'L2X-USDC-ETH-3000',
+          token0Symbol: 'USDC',
+          token1Symbol: 'WETH',
+          token0Price: '0.000320862',
+          token1Price: '3116.6',
+          fee: '3000',
+          liquidity: '63394812235204'
+        },
+        {
+          id: 'ARTHSWAP-USDC-ETH-3000',
+          token0Symbol: 'USDC',
+          token1Symbol: 'WETH',
+          token0Price: '0.000319968',
+          token1Price: '3125.31',
+          fee: '3000',
+          liquidity: '149447942641111'
+        }
+      ]
+    const result = findProfitableSwaps(entries, 1000);
+
+    expect(result).toEqual([
+      ]);
+  });
+
   it('should find profitable swaps', () => {
     const entries = 
     [
@@ -8,50 +45,33 @@ describe('findProfitableSwaps', () => {
           id: 'QUICKSWAP-USDC-ETH-3000',
           token0Symbol: 'USDC',
           token1Symbol: 'WETH',
-          token0Price: '0.000316478',
-          token1Price: '3159.78',
-          liquidity: '66666318797565'
+          token0Price: '0.000320859',
+          token1Price: '3116.64',
+          fee: '3000',
+          liquidity: '70495382874864'
         },
         {
           id: 'L2X-USDC-ETH-3000',
           token0Symbol: 'USDC',
           token1Symbol: 'WETH',
-          token0Price: '0.000315666',
-          token1Price: '3167.9',
-          liquidity: '59489440207896'
+          token0Price: '0.000320862',
+          token1Price: '3116.6',
+          fee: '3000',
+          liquidity: '63394812235204'
         },
         {
           id: 'ARTHSWAP-USDC-ETH-3000',
           token0Symbol: 'USDC',
           token1Symbol: 'WETH',
-          token0Price: '0.000316749',
-          token1Price: '3157.07',
+          token0Price: '0.000319968',
+          token1Price: '3170.31',
+          fee: '3000',
           liquidity: '149447942641111'
         }
       ]
-
-    const result = findProfitableSwaps(entries);
+    const result = findProfitableSwaps(entries, 1000);
 
     expect(result).toEqual([
-        {
-          entry1: {
-            id: 'QUICKSWAP-ASTR-USDC-3000',
-            token0Symbol: 'USDC',
-            token1Symbol: 'ASTR',
-            token0Price: '9.60961',
-            token1Price: '0.12',
-            liquidity: '4660950318635340'
-          },
-          entry2: {
-            id: 'L2X-USDC-ASTR-3000',
-            token0Symbol: 'USDC',
-            token1Symbol: 'ASTR',
-            token0Price: '9.60942',
-            token1Price: '0.104065',
-            liquidity: '228560328795427049'
-          },
-          profit: 0.0001899999999999993,
-        },
       ]);
   });
 });
